@@ -69,3 +69,45 @@ INSERT ALL
   INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
     VALUES (306, 3, 5, 6, 29, 47)
 SELECT * FROM dual;
+
+INSERT ALL
+  -- 1. Standard Monday morning route
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (1, 1, 1, 1, 'Monday', '08:00', '08:38', 'Morning')
+    
+  -- 2. Different bus, driver, and route on Monday
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (2, 2, 2, 2, 'Monday', '09:00', '09:48', 'Morning')
+    
+  -- 3. Evening shift testing on Monday
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (3, 3, 3, 3, 'Monday', '17:00', '17:47', 'Evening')
+    
+  -- 4. Driver 2 swapped to Bus 1 on Route 3 (Tuesday)
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (4, 1, 2, 3, 'Tuesday', '07:00', '07:47', 'Morning')
+    
+  -- 5. Driver 3 on Bus 2 taking Route 1 (Tuesday Evening)
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (5, 2, 3, 1, 'Tuesday', '16:00', '16:38', 'Evening')
+    
+  -- 6. Driver 1 testing Route 2 on a Wednesday
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (6, 3, 1, 2, 'Wednesday', '10:00', '10:48', 'Morning')
+    
+  -- 7. Late evening shift for Driver 3
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (7, 1, 3, 2, 'Thursday', '18:00', '18:48', 'Evening')
+    
+  -- 8. Early morning shift testing
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (8, 2, 1, 3, 'Thursday', '06:00', '06:47', 'Morning')
+    
+  -- 9. Friday evening rush testing
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (9, 3, 2, 1, 'Friday', '19:00', '19:38', 'Evening')
+    
+  -- 10. Repeating the Monday pattern on Friday to test consistency
+  INTO assignments (assignment_id, bus_id, driver_id, route_id, assignment_day, departure_time, arrival_time, shift) 
+    VALUES (10, 1, 1, 1, 'Friday', '08:00', '08:38', 'Morning')
+SELECT * FROM dual;
