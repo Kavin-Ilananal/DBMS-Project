@@ -45,6 +45,7 @@ create table routes
     total_distance number(10,6),
     start_stop_id number,
     end_stop_id number,
+    freqency_minutes number,
     constraint fk_route_start foreign key(start_stop_id) references stops(stop_id),
     constraint fk_route_end foreign key(end_stop_id) references stops(stop_id)
 );
@@ -60,5 +61,41 @@ create table search_history
     constraint fk_search_user foreign key(user_id) references users(user_id),
     constraint fk_search_from_stop foreign key(from_stop_id) references stops(stop_id),
     constraint fk_search_to_stop foreign key(to_stop_id) references stops(stop_id)
+);
+create table route_stops
+(
+    route_stops_id number primary key,
+    route_id number not null,
+    stop_id number not null,
+    stop_sequence number not null,
+    distance_from_start number(8,2),
+    minutes_from_start number,
+    constraint fk_rs_route foreign key (route_id) references routes(route_id),
+    constraint fk_rs_stop foreign key (stop_id) references stops(stop_id)
+);
+
+create table fares
+(
+    fare_id number primary key,
+    route_id number not null,
+    from_sequence number,
+    to_sequence number,
+    fare_amt number(8,2),
+    constraint fk_fares_route foreign key(route_id) references routes(route_id)
+);
+
+create table assignments
+(
+    assignment_id number primary key,
+    bus_id number not null,
+    driver_id number not null,
+    route_id number not null,
+    assignment_day varchar2(20),         --like sunday/monday/ ...
+    departure_time varchar2(5),           --like 08:50 or 17:25
+    arrival_time varchar2(5),
+    shift varchar2(20),    -- morning or evening
+    constraint fk_assign_bus foreign key(bus_id) references buses(bus_id),
+    constraint fk_assign_driver foreign key(driver_id) references drivers(driver_id),
+    constraint fk_assign_route foreign key(route_id) references routes(route_id)
 );
     
