@@ -1,0 +1,71 @@
+INSERT ALL
+  INTO stops (stop_id, stop_name) VALUES (1, 'A')
+  INTO stops (stop_id, stop_name) VALUES (2, 'B')
+  INTO stops (stop_id, stop_name) VALUES (3, 'C')
+  INTO stops (stop_id, stop_name) VALUES (4, 'D')
+  INTO stops (stop_id, stop_name) VALUES (5, 'E')
+  INTO stops (stop_id, stop_name) VALUES (6, 'F')
+  INTO stops (stop_id, stop_name) VALUES (7, 'G')
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (1, 'B-001', 'govt', 1)
+  INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (2, 'B-002', 'govt', 1)
+  INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (3, 'B-003', 'pvt', 1)
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO drivers (driver_id, name, is_active) VALUES (1, 'Ram', 1)
+  INTO drivers (driver_id, name, is_active) VALUES (2, 'Gopal', 1)
+  INTO drivers (driver_id, name, is_active) VALUES (3, 'Sekhar', 1)
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
+    VALUES (1, 'R1', 'Route 1', 25, 1, 6, 20)
+  INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
+    VALUES (2, 'R2', 'Route 2', 33, 5, 6, 25)
+  INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
+    VALUES (3, 'R3', 'Route 3', 29, 6, 5, 30)
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (101, 1, 1, 1, 0, 0)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (102, 1, 2, 2, 4, 5)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (103, 1, 4, 3, 8, 10)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (104, 1, 3, 4, 10, 14)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (105, 1, 7, 5, 13, 19)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (106, 1, 6, 6, 25, 38)
+
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (201, 2, 5, 1, 0, 0)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (202, 2, 4, 2, 10, 20)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (203, 2, 1, 3, 13, 25)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (204, 2, 2, 4, 17, 30)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (205, 2, 7, 5, 21, 35)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (206, 2, 6, 6, 33, 48)
+
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (301, 3, 6, 1, 0, 0)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (302, 3, 4, 2, 6, 10)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (303, 3, 2, 3, 10, 15)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (304, 3, 1, 4, 14, 20)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (305, 3, 3, 5, 22, 35)
+  INTO route_stops (route_stops_id, route_id, stop_id, stop_sequence, distance_from_start, minutes_from_start) 
+    VALUES (306, 3, 5, 6, 29, 47)
+SELECT * FROM dual;
