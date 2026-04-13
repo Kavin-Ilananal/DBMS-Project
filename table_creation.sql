@@ -45,7 +45,7 @@ create table routes
     total_distance number(10,6),
     start_stop_id number,
     end_stop_id number,
-    freqency_minutes number,
+    frequency_minutes number,
     constraint fk_route_start foreign key(start_stop_id) references stops(stop_id),
     constraint fk_route_end foreign key(end_stop_id) references stops(stop_id)
 );
