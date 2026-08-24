@@ -16,7 +16,7 @@ except Exception as e:
     exit()
 
 cursor = conn.cursor()
-
+cursor.execute("Drop table search_history")
 tables = [
 
     """CREATE TABLE stops (
@@ -101,17 +101,20 @@ tables = [
         CONSTRAINT fk_fares_route FOREIGN KEY(route_id) REFERENCES routes(route_id)
     )""",
 
-    """CREATE TABLE search_history (
-        history_id NUMBER PRIMARY KEY,
-        user_id NUMBER NOT NULL,
-        from_stop_id NUMBER,
-        to_stop_id NUMBER,
-        searched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        result_snapshot VARCHAR2(2000),
-        CONSTRAINT fk_search_user FOREIGN KEY(user_id) REFERENCES users(user_id),
-        CONSTRAINT fk_search_from_stop FOREIGN KEY(from_stop_id) REFERENCES stops(stop_id),
-        CONSTRAINT fk_search_to_stop FOREIGN KEY(to_stop_id) REFERENCES stops(stop_id)
-    )"""
+    """create table search_history
+        (
+            history_id number primary key,
+            user_id number not null,
+            from_stop_id number,
+            to_stop_id number,
+            time varchar2(5),
+            day varchar2(20),
+            searched_at timestamp default current_timestamp,
+            result_snapshot varchar2(2000),      --we can have a json or something
+            constraint fk_search_user foreign key(user_id) references users(user_id),
+            constraint fk_search_from_stop foreign key(from_stop_id) references stops(stop_id),
+            constraint fk_search_to_stop foreign key(to_stop_id) references stops(stop_id)
+        )"""
 ]
 
 for table in tables:
@@ -121,10 +124,45 @@ for table in tables:
     except Exception as e:
         print("Table exists:", e)
 
+try:
+    cursor.execute("CREATE SEQUENCE search_history_seq START WITH 1 INCREMENT BY 1")
+    print("Sequence created")
+except Exception as e:
+    print("Sequence exists:", e)
+conn.commit()
+try:
+    cursor.execute("""
+    CREATE OR REPLACE TRIGGER trg_history_auto_id
+    BEFORE INSERT ON search_history
+    FOR EACH ROW
+    BEGIN
+        IF :NEW.history_id IS NULL THEN
+            SELECT search_history_seq.NEXTVAL INTO :NEW.history_id FROM dual;
+        END IF;
+    END;
+    """)
+    print("Trigger1 created")
+except Exception as e:
+    print("Trigger1 exists:", e)
 
+try:
+    cursor.execute("""
+    CREATE OR REPLACE TRIGGER trg_prevent_invalid_search
+    BEFORE INSERT ON search_history
+    FOR EACH ROW
+    BEGIN
+        IF :NEW.from_stop_id = :NEW.to_stop_id THEN
+            RAISE_APPLICATION_ERROR(-20001,
+            'Invalid Search: The starting stop and destination stop cannot be the same.');
+        END IF;
+    END;
+    """)
+    print("Trigger2 created")
+except Exception as e:
+    print("Trigger2 exists:", e)
 # USERS
 users_data = [
-    (1, 'Mike Smith', '9999999999', 'mike@example.com', 'pass123'),
+    (4, 'Mike Smith', '9999999999', 'mike@example.com', 'pass123'),
     (2, 'John Doe', '8888888888', 'john@example.com', 'pass456'),
     (3, 'Alice Brown', '7777777777', 'alice@example.com', 'pass789')
 ]
@@ -137,63 +175,6 @@ for user in users_data:
         """, user)
     except:
         pass
-
-# STOPS
-try:
-    cursor.execute("""
-        INSERT ALL
-          INTO stops (stop_id, stop_name) VALUES (1, 'A')
-          INTO stops (stop_id, stop_name) VALUES (2, 'B')
-          INTO stops (stop_id, stop_name) VALUES (3, 'C')
-          INTO stops (stop_id, stop_name) VALUES (4, 'D')
-          INTO stops (stop_id, stop_name) VALUES (5, 'E')
-          INTO stops (stop_id, stop_name) VALUES (6, 'F')
-          INTO stops (stop_id, stop_name) VALUES (7, 'G')
-        SELECT * FROM dual
-    """)
-    print("Stops inserted")
-except:
-    print("Stops already exist")
-
-# BUSES
-try:
-    cursor.execute("""
-        INSERT ALL
-          INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (1, 'B-001', 'govt', 1)
-          INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (2, 'B-002', 'govt', 1)
-          INTO buses (bus_id, bus_number, bus_type, is_active) VALUES (3, 'B-003', 'pvt', 1)
-        SELECT * FROM dual
-    """)
-    print("Buses inserted")
-except:
-    print("Buses already exist")
-
-# DRIVERS
-try:
-    cursor.execute("""
-        INSERT ALL
-          INTO drivers (driver_id, name, is_active) VALUES (1, 'Ram', 1)
-          INTO drivers (driver_id, name, is_active) VALUES (2, 'Gopal', 1)
-          INTO drivers (driver_id, name, is_active) VALUES (3, 'Sekhar', 1)
-        SELECT * FROM dual
-    """)
-except:
-    pass
-
-# ROUTES
-try:
-    cursor.execute("""
-        INSERT ALL
-          INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
-            VALUES (1, 'R1', 'Route 1', 25, 1, 6, 20)
-          INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
-            VALUES (2, 'R2', 'Route 2', 33, 5, 6, 25)
-          INTO routes (route_id, route_number, route_name, total_distance, start_stop_id, end_stop_id, frequency_minutes) 
-            VALUES (3, 'R3', 'Route 3', 29, 6, 5, 30)
-        SELECT * FROM dual
-    """)
-except:
-    pass
 
 conn.commit()
 print("All data inserted")
